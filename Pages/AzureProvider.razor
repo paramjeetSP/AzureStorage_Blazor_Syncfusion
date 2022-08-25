@@ -1,0 +1,98 @@
+﻿@page "/"
+@using Syncfusion.Blazor.FileManager
+@using Syncfusion.Blazor.Popups
+@using Syncfusion.Blazor.PdfViewer
+@using Syncfusion.Blazor.PdfViewerServer
+@using Newtonsoft.Json
+@using FileManagerSample.Models;
+@inject AzureFileProvider _operation1
+
+<style>
+    .e-search-wrap {
+        display: none;
+    }
+</style>
+
+<div class="control-section">
+
+    <SfFileManager AllowDragAndDrop="true" ID="filemanager" ShowHiddenItems="true" 
+        RootAliasName="Cloud Files" @ref="file" TValue="FileManagerDirectoryContent">
+        <FileManagerEvents TValue="FileManagerDirectoryContent" OnFileOpen="fileOpen"></FileManagerEvents>
+        <FileManagerAjaxSettings Url="/api/SyncfusionAzureFileProvider/AzureFileOperations"
+                                 DownloadUrl="/api/SyncfusionAzureFileProvider/AzureDownload"
+                                 UploadUrl="/api/SyncfusionAzureFileProvider/Upload" 
+                                 GetImageUrl="/api/SyncfusionAzureFileProvider/GetImage">
+        </FileManagerAjaxSettings>
+        <FileManagerUploadSettings AllowedExtensions=".pdf,.docx,.xlsx,.pptx"></FileManagerUploadSettings>
+        <FileManagerContextMenuSettings File="@Items" Folder="@Items"></FileManagerContextMenuSettings>
+        <FileManagerToolbarSettings Items="@Items"></FileManagerToolbarSettings>
+    </SfFileManager>
+
+    <SfDialog @ref="dialog" Width="1200px" ShowCloseIcon="true" IsModal="true" Visible="false" Header="PDF  Viewer">
+        <DialogTemplates>
+            <Content>
+                <SfPdfViewerServer DocumentPath="@DocumentPath" Width="1180px" Height="500px" />
+            </Content>
+        </DialogTemplates>
+    </SfDialog>
+
+</div>
+@code {
+    public string[] Items = new string[] { "Open", "|", "Upload", "NewFolder", "SortBy", "View", "Copy", "Refresh", "Download", "Cut", "Delete", "Details", "Paste" };
+    public string[] Toolbar_Items = new string[] { "NewFolder", "Open", "|", "Upload", "Refresh", "Copy", "Download", "Delete", "Details", "Paste" };
+
+    SfFileManager<FileManagerDirectoryContent> file;
+    private string DocumentPath { get; set; }
+    SfPdfViewerServer PdfViewer;
+    SfDialog dialog;
+    CloudFileDirectory fileDirectory;
+    public async Task fileOpen(Syncfusion.Blazor.FileManager.FileOpenEventArgs<FileManagerDirectoryContent> args)
+    {
+        if(args.FileDetails != null)
+        {
+            if ((args.FileDetails.IsFile == true) && args.FileDetails.Type == ".pdf")
+            {
+                await dialog.ShowAsync();
+                var memoryStream = new MemoryStream();
+                fileDirectory = await _operation1.AzureShareConfigSettingsAsync();
+                if (args.FileDetails.FilterPath == "/")
+                {
+                    CloudFile Sourcefile = fileDirectory.GetFileReference(args.FileDetails.Name);
+                    if (await Sourcefile.ExistsAsync())
+                    {
+
+                        await Sourcefile.DownloadToStreamAsync(memoryStream);
+                    }
+                }
+                else
+                {
+                    string newpath = string.Empty;
+                    if (args.FileDetails.FilterPath.Contains("/") == true)
+                    {
+                        newpath = args.FileDetails.FilterPath.Remove(0, 1);
+
+                    }
+                    else
+                    {
+                        newpath = args.FileDetails.FilterPath;
+                    }
+                    var directory = fileDirectory.GetDirectoryReference(newpath);
+                    CloudFile Sourcefile = directory.GetFileReference(args.FileDetails.Name);
+                    if (await Sourcefile.ExistsAsync())
+                    {
+                        await Sourcefile.DownloadToStreamAsync(memoryStream);
+                    }
+                }
+#pragma warning disable CS8602 // Dereference of a possibly null reference.
+                byte[] byteArray = memoryStream.ToArray();
+                string base64String = Convert.ToBase64String(byteArray);
+                DocumentPath = "data:application/pdf;base64," + base64String;
+#pragma warning restore CS8602 // Dereference of a possibly null reference.
+                //Clean up the memory stream
+                memoryStream.Flush();
+
+            }
+        }
+    }
+
+}

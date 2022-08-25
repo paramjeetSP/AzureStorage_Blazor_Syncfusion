@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>14f1c804-54e8-4f6f-a7b2-ac5aa589948f</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.PowerShell.SDK" Version="7.2.5" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="Syncfusion.Blazor.FileManager" Version="20.2.0.40" />
+    <PackageReference Include="Syncfusion.Blazor.FileManager.PhysicalFileProvider" Version="20.2.0.36" />
+    <PackageReference Include="Syncfusion.Blazor.PdfViewer" Version="20.2.0.40" />
+    <PackageReference Include="Syncfusion.Blazor.PdfViewerServer.Windows" Version="20.2.0.40" />
+    <PackageReference Include="Syncfusion.Blazor.Themes" Version="20.2.0.40" />
+    <PackageReference Include="Syncfusion.EJ2.FileManager.AzureFileProvider.AspNet.Core" Version="20.2.0.36" />
+	  <PackageReference Include="Azure.Storage.Blobs" Version="12.13.0" />
+	  <PackageReference Include="Azure.Storage.Common" Version="12.12.0" />
+	  <PackageReference Include="Azure.Storage.Files.Shares" Version="12.11.0" />
+	  <PackageReference Include="Microsoft.Azure.ConfigurationManager" Version="4.0.0" />
+	  <PackageReference Include="Syncfusion.Pdf.Imaging.Net.Core" Version="20.2.0.40" />
+	  <PackageReference Include="WindowsAzure.Storage" Version="9.3.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="diCrSysPKINet">
+      <HintPath>C:\Program Files (x86)\CryptoSysPKI\DotNet\diCrSysPKINet.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>

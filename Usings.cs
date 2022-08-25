@@ -1,0 +1,12 @@
+﻿global using FileManagerSample.Data;
+global using Microsoft.AspNetCore.Components;
+global using Microsoft.AspNetCore.Components.Web;
+global using Syncfusion.Blazor;
+global using Microsoft.AspNetCore.Http.Features;
+global using Microsoft.AspNetCore.Mvc;
+global using Newtonsoft.Json;
+global using Newtonsoft.Json.Serialization;
+ global using RouteAttribute = Microsoft.AspNetCore.Mvc.RouteAttribute;
+global using Microsoft.WindowsAzure.Storage;
+global using Microsoft.WindowsAzure.Storage.File;
+global using Syncfusion.Blazor.FileManager;
